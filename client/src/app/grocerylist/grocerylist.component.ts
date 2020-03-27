@@ -1,3 +1,4 @@
+
 import { Component, OnInit } from '@angular/core';
 import { CommonService } from '../common/common.service'
 import { Grocery } from '../groceryadd/grocery.model'
@@ -9,16 +10,29 @@ import { Grocery } from '../groceryadd/grocery.model'
 })
 export class GroceryListComponent implements OnInit {
 
-	private groceryList:Grocery[]
+    private groceryList:Grocery[]
 
-	constructor(private commonService:CommonService){
+    constructor(private commonService:CommonService){
 
-	}
+    }
 
-	ngOnInit(){
-		this.commonService.add_subject.subscribe(response => {
-			this.groceryList = this.commonService.groceryList
-		})
-	}
+    ngOnInit(){
+
+        this.getAllGrocery()
+
+        this.commonService.add_subject.subscribe(response => {
+            this.getAllGrocery()
+        })
+
+    }
+
+    getAllGrocery(){
+        this.commonService.getGrocery().subscribe(res =>{
+            this.groceryList  = []
+            res.json().data.map(e => {
+                this.groceryList.push(new Grocery(e.item,false));
+            })
+        })
+    }
 
 }
