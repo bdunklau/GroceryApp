@@ -1,5 +1,6 @@
 
 const MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient(uri, {useUnifiedTopology: true});
 const assert = require('assert');
 const url = 'mongodb://localhost:27017/groceryDb';
 
@@ -22,7 +23,7 @@ class GroceryService{
         let self = this;
         let groceryItem = this.req.body.groceryItem;
         try{
-            MongoClient.connect(url, function(err, db) {
+            client.connect(url, function(err, db) {
                 assert.equal(null, err);
                 self.insert(groceryItem, db, function(){
                     db.close()
@@ -43,7 +44,7 @@ class GroceryService{
     getGrocery(){
         let self = this;
         try{
-            MongoClient.connect(url, function(err, db) {
+            client.connect(url, function(err, db) {
                 assert.equal(null, err);
                 let groceryList = []
                 let cursor = db.collection('grocery').find();
