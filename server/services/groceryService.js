@@ -1,8 +1,8 @@
 
 const MongoClient = require('mongodb').MongoClient;
-const client = new MongoClient(uri, {useUnifiedTopology: true});
 const assert = require('assert');
 const url = 'mongodb://localhost:27017/groceryDb';
+const client = new MongoClient(url, {useUnifiedTopology: true});
 
 class GroceryService{
     

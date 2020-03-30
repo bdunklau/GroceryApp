@@ -18,6 +18,14 @@ app.get('/api/getGrocery', function (req, res) {
   groceryServiceObj.addGrocery()
 })
 
-app.listen(3000, function () {
+app.get('/api/foo', function(req, res) {
+  res.send({ok: 'ok!!'});
+})
+
+app.get('/api/bar', function(req, res) {
+  res.send({bar:'bar'});
+})
+
+app.listen(3000, "172.31.28.156", function () {
   console.log('Grocery Web app service listening on port 3000!')
 })
