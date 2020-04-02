@@ -1,6 +1,5 @@
 {
     "/api/*": {
-	"not_used": "not used, not mentioned in package.json",
         "target":"http://172.31.28.156:3000",
         "changeOrigin": true,
         "secure":false,

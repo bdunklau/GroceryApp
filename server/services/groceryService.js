@@ -1,8 +1,17 @@
 
-const MongoClient = require('mongodb').MongoClient;
+// const MongoClient = require('mongodb').MongoClient({useUnifiedTopology: true});
 const assert = require('assert');
-const url = 'mongodb://localhost:27017/groceryDb';
-const client = new MongoClient(url, {useUnifiedTopology: true});
+// const url = 'mongodb://172.31.28.156:27017/groceryDb';
+// const url = 'mongodb://172.31.28.156:27017';
+// const client = new MongoClient(url, {useUnifiedTopology: true});
+
+
+const MongoClient = require('mongodb').MongoClient;
+// const url = "mongodb+srv://admin:quickbrownfox@172.31.28.156:27017";
+const url = "mongodb://admin:quickbrownfox@172.31.28.156:27017";
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+
 
 class GroceryService{
     
@@ -11,7 +20,8 @@ class GroceryService{
         this.res = res
     }
 
-    insert(groceryItem, db, callback){
+    insert(groceryItem, theDb, callback){
+        var db = theDb.db('groceryDb');
         db.collection('grocery').insertOne({
                 "item" : groceryItem
         }, function(){
@@ -23,7 +33,9 @@ class GroceryService{
         let self = this;
         let groceryItem = this.req.body.groceryItem;
         try{
-            client.connect(url, function(err, db) {
+            // client.connect(url, function(err, db) {
+            MongoClient.connect(url, function(err, theDb) {
+                var db = theDb.db('groceryDb');
                 assert.equal(null, err);
                 self.insert(groceryItem, db, function(){
                     db.close()
@@ -43,28 +55,39 @@ class GroceryService{
 
     getGrocery(){
         let self = this;
+        let info = []
+        info.push({MongoClient: MongoClient});
         try{
-            client.connect(url, function(err, db) {
-                assert.equal(null, err);
+            // client.connect(url, function(err, db) {
+            MongoClient.connect(url, function(err, theDb) {
+                info.push({MongoClient: MongoClient});
+                if(err) throw err;
+                //assert.equal(null, err);
                 let groceryList = []
-                let cursor = db.collection('grocery').find();
 
+                var db = theDb.db('groceryDb');
+                let cursor = db.collection('grocery').find();
+                info.push("got cursor");
+                if(!cursor) throw "no cursor";
                 cursor.each(function(err, doc) {
-                assert.equal(err, null);
-                if (doc != null) {
-                    groceryList.push(doc)
-                } else {
-                    return self.res.status(200).json({
-                        status: 'success',
-                        data: groceryList
-                    })
-                }
+                    info.push("cursor.each() callback func")
+                    if(err) throw err;
+                    //assert.equal(err, null);
+                    if (doc != null) {
+                        groceryList.push(doc)
+                    } else {
+                        return self.res.status(200).json({
+                            status: 'success',
+                            data: groceryList
+                        })
+                    }
                 });
             });
         }
         catch(error){
             return self.res.status(500).json({
                 status: 'error',
+                info: info,
                 error: error
             })
         }

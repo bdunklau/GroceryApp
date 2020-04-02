@@ -20,6 +20,6 @@ export class CommonService {
 	}
 
 	getGrocery(){
-		return this.http.post('/api/getGrocery',{})
+		return this.http.get('/api/getGrocery',{})
 	}
 }
