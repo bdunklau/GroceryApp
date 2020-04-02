@@ -1,15 +1,7 @@
 
-// const MongoClient = require('mongodb').MongoClient({useUnifiedTopology: true});
 const assert = require('assert');
-// const url = 'mongodb://172.31.28.156:27017/groceryDb';
-// const url = 'mongodb://172.31.28.156:27017';
-// const client = new MongoClient(url, {useUnifiedTopology: true});
-
-
 const MongoClient = require('mongodb').MongoClient;
-// const url = "mongodb+srv://admin:quickbrownfox@172.31.28.156:27017";
-const url = "mongodb://admin:quickbrownfox@172.31.28.156:27017";
-// const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const url = "mongodb://172.31.28.156:27017";
 
 
 
@@ -20,8 +12,7 @@ class GroceryService{
         this.res = res
     }
 
-    insert(groceryItem, theDb, callback){
-        var db = theDb.db('groceryDb');
+    insert(groceryItem, db, callback){
         db.collection('grocery').insertOne({
                 "item" : groceryItem
         }, function(){
@@ -33,13 +24,11 @@ class GroceryService{
         let self = this;
         let groceryItem = this.req.body.groceryItem;
         try{
-            // client.connect(url, function(err, db) {
-            MongoClient.connect(url, function(err, theDb) {
-            // client.connect(url, function(err, theDb) {
-                var db = theDb.db('groceryDb');
+            MongoClient.connect(url, function(err, client) {
+                var db = client.db("groceryDb");
                 assert.equal(null, err);
                 self.insert(groceryItem, db, function(){
-                    db.close()
+                    client.close()
                     return self.res.status(200).json({
                         status: 'success'
                     })
@@ -59,22 +48,20 @@ class GroceryService{
         let info = []
         info.push({MongoClient: MongoClient});
         try{
-            // client.connect(url, function(err, db) {
-            MongoClient.connect(url, function(err, theDb) {
-            // client.connect(url, function(err, theDb) {
+            MongoClient.connect(url, function(err, client) {
                 info.push({MongoClient: MongoClient});
                 if(err) throw err;
-                //assert.equal(null, err);
+                assert.equal(null, err);
                 let groceryList = []
 
-                var db = theDb.db('groceryDb');
+                var db = client.db("groceryDb");
                 let cursor = db.collection('grocery').find();
                 info.push("got cursor");
                 if(!cursor) throw "no cursor";
                 cursor.each(function(err, doc) {
                     info.push("cursor.each() callback func")
                     if(err) throw err;
-                    //assert.equal(err, null);
+                    assert.equal(err, null);
                     if (doc != null) {
                         groceryList.push(doc)
                     } else {
