@@ -9,7 +9,7 @@ const assert = require('assert');
 const MongoClient = require('mongodb').MongoClient;
 // const url = "mongodb+srv://admin:quickbrownfox@172.31.28.156:27017";
 const url = "mongodb://admin:quickbrownfox@172.31.28.156:27017";
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
+// const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 
@@ -35,6 +35,7 @@ class GroceryService{
         try{
             // client.connect(url, function(err, db) {
             MongoClient.connect(url, function(err, theDb) {
+            // client.connect(url, function(err, theDb) {
                 var db = theDb.db('groceryDb');
                 assert.equal(null, err);
                 self.insert(groceryItem, db, function(){
@@ -60,6 +61,7 @@ class GroceryService{
         try{
             // client.connect(url, function(err, db) {
             MongoClient.connect(url, function(err, theDb) {
+            // client.connect(url, function(err, theDb) {
                 info.push({MongoClient: MongoClient});
                 if(err) throw err;
                 //assert.equal(null, err);
