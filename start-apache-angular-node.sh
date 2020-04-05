@@ -1,5 +1,5 @@
-# start apache
-sudo systemctl start httpd
+# restart apache
+~/GroceryApp/restartapache.sh
 
 # start the angular app
 cd ~/GroceryApp/client
