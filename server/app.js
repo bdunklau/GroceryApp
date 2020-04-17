@@ -2,7 +2,7 @@
 const express = require('express')
 const groceryService  = require('./services/groceryService')
 const app = express()
-
+const port = 3001;
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended : false}))
@@ -30,6 +30,6 @@ app.get('/api/bar', function(req, res) {
   res.send({bar:'bar'});
 })
 
-app.listen(3000, "172.31.28.156", function () {
-  console.log('Grocery Web app service listening on port 3000!')
+app.listen(port, "172.31.28.156", function () {
+  console.log(`Grocery Web app service listening on port ${port}!`)
 })
