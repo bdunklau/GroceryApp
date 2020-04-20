@@ -5,9 +5,12 @@
   "angular-cli": {},
   "scripts": {
     "ng": "ng",
-    "build": "ng build",
     "start": "ng serve --host 172.31.28.156 --port 4201 --proxy-config proxy.conf.json",
+    "stop": "sudo kill $(sudo lsof -t -i:4201)", 
+    "build": "ng build --prod --base-href /grocery/",
+    "builddev": "ng build --base-href /grocery/",
     "test": "ng test",
+    "deploy": "rm -rf /var/www/html/grocery && cp -r ~/GroceryApp/client/dist/. /var/www/html/grocery",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "protractor"
   },
